@@ -5,10 +5,22 @@ using PostService.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 builder.Services.AddScoped<IPostingRepository, PostingRepository>();
 builder.Services.AddScoped<IPostingService, PostingService>();
 
 var app = builder.Build();
+
+app.UseCors();
 
 using (var scope = app.Services.CreateScope())
 {
