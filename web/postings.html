@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>PostService — Відправлення</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>PostService</h1>
+        <nav>
+            <a href="index.html">Головна</a>
+            <a href="postings.html">Відправлення</a>
+            <a href="about.html">Про програму</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Список відправлень</h2>
+        <div class="toolbar">
+            <button id="btnCreate" class="btn">Створити</button>
+            <button id="btnReload" class="btn btn-secondary">Оновити</button>
+        </div>
+        <p id="status"></p>
+        <table>
+            <thead id="table-header">
+                <tr>
+                    <th x-column="id">ID</th>
+                    <th x-column="content">Вміст</th>
+                    <th x-column="from">Відправник</th>
+                    <th x-column="to">Одержувач</th>
+                    <th x-column="deliveryType">Тип доставки</th>
+                    <th x-column="weight">Вага, кг</th>
+                    <th x-column="price">Ціна, грн</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+            <tbody id="postings"></tbody>
+        </table>
+    </main>
+
+    <div id="confirmModal" class="modal-overlay" style="display:none;">
+        <div class="modal">
+            <p id="confirmText"></p>
+            <div class="modal-buttons">
+                <button id="confirmYes" class="btn btn-danger">Видалити</button>
+                <button id="confirmNo" class="btn btn-secondary">Скасувати</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        loadPostings();
+
+        document.getElementById('btnCreate').addEventListener('click', function() {
+            window.location.href = 'edit.html';
+        });
+
+        document.getElementById('btnReload').addEventListener('click', function() {
+            loadPostings();
+        });
+    </script>
+</body>
+</html>
