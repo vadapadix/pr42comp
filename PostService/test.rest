@@ -53,7 +53,7 @@ DELETE http://localhost:5028/postings/1
 
 ### Get deleted posting by id (Перевірка, що посилка дійсно видалена -> 404)
 GET http://localhost:5028/postings/1
-### Некоректні дані: 400 з errors
+### Некоректні дані: перевірка фактичної відповіді сервера
 POST http://localhost:5028/postings
 Content-Type: application/json
 

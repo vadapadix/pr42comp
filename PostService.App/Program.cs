@@ -29,7 +29,6 @@ namespace PostService.App
                              $"Стек: {exception.StackTrace}";
 
             Debug.WriteLine(details);
-            Debug.WriteLine(exception);
 
             MessageBox.Show(
                 "Виникла непередбачена помилка. Програму буде закрито.",

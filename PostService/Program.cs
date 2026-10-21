@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using PostService.Dtos;
 using PostService.Mappings;
 using PostService.BusinessLogic;
@@ -56,12 +55,6 @@ app.MapGet("/postings/{id}", (int id, IPostingService postingService) =>
 
 app.MapPost("/postings", (PostingPostDto postDto, IPostingService postingService) =>
 {
-    var errors = ValidatePosting(postDto);
-    if (errors.Count > 0)
-    {
-        return Results.ValidationProblem(errors);
-    }
-
     var newPosting = PostingMapper.ToPosting(postDto);
     var savedObject = postingService.Create(newPosting);
     var resultDto = PostingMapper.ToPostingGetDto(savedObject);
@@ -72,16 +65,7 @@ app.MapPut("/postings/{id}", (int id, PostingPutDto putDto, IPostingService post
 {
     if (id != putDto.Id)
     {
-        return Results.ValidationProblem(new Dictionary<string, string[]>
-        {
-            ["Id"] = ["Id в маршруті та в тілі запиту не збігаються"]
-        });
-    }
-
-    var errors = ValidatePosting(putDto);
-    if (errors.Count > 0)
-    {
-        return Results.ValidationProblem(errors);
+        return Results.BadRequest("Id в маршруті та в тілі запиту не збігаються");
     }
 
     var postingToUpdate = PostingMapper.ToPosting(putDto);
@@ -107,17 +91,3 @@ app.MapDelete("/postings/{id}", (int id, IPostingService postingService) =>
 });
 
 app.Run();
-static Dictionary<string, string[]> ValidatePosting(object posting)
-{
-    var results = new List<ValidationResult>();
-    Validator.TryValidateObject(posting, new ValidationContext(posting), results, true);
-    var errors = new Dictionary<string, string[]>();
-    foreach (var result in results)
-    {
-        foreach (var field in result.MemberNames)
-        {
-            errors[field] = [result.ErrorMessage!];
-        }
-    }
-    return errors;
-}

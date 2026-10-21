@@ -37,7 +37,7 @@ public class PostServiceClient : IPostServiceClient
         using var response = await _httpClient.GetAsync("postings");
         await EnsureSuccessAsync(response);
         var result = await response.Content.ReadFromJsonAsync<PostingGetDto[]>();
-        return result ?? throw new System.Text.Json.JsonException("Сервер повернув порожню відповідь.");
+        return result!;
     }
 
     public async Task<PostingGetDto> GetPostingByIdAsync(int id)
@@ -45,21 +45,23 @@ public class PostServiceClient : IPostServiceClient
         using var response = await _httpClient.GetAsync($"postings/{id}");
         await EnsureSuccessAsync(response);
         var result = await response.Content.ReadFromJsonAsync<PostingGetDto>();
-        return result ?? throw new System.Text.Json.JsonException("Сервер повернув порожню відповідь.");
+        return result!;
     }
 
     public async Task<PostingGetDto> CreatePostingAsync(PostingPostDto dto)
     {
         using var response = await _httpClient.PostAsJsonAsync("postings", dto);
         await EnsureSuccessAsync(response);
-        return await response.Content.ReadFromJsonAsync<PostingGetDto>() ?? throw new System.Text.Json.JsonException("Сервер повернув порожню відповідь.");
+        var result = await response.Content.ReadFromJsonAsync<PostingGetDto>();
+        return result!;
     }
 
     public async Task<PostingGetDto> UpdatePostingAsync(int id, PostingPutDto dto)
     {
         using var response = await _httpClient.PutAsJsonAsync($"postings/{id}", dto);
         await EnsureSuccessAsync(response);
-        return await response.Content.ReadFromJsonAsync<PostingGetDto>() ?? throw new System.Text.Json.JsonException("Сервер повернув порожню відповідь.");
+        var result = await response.Content.ReadFromJsonAsync<PostingGetDto>();
+        return result!;
     }
 
     public async Task DeletePostingAsync(int id)

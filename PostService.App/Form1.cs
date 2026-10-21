@@ -53,7 +53,7 @@ namespace PostService.App
         private async void btnCreate_Click(object sender, EventArgs e)
         {
             using var dialog = new PostingEditForm(_postServiceClient);
-            if (dialog.ShowDialog() == DialogResult.OK || dialog.RecordNotFound)
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
                 await LoadPostingAsync();
             }
@@ -133,7 +133,7 @@ namespace PostService.App
         private async void button1_Click(object sender, EventArgs e)
         {
             using var dialog = new PostingEditForm(_postServiceClient);
-            if (dialog.ShowDialog() == DialogResult.OK || dialog.RecordNotFound)
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
                 await LoadPostingAsync();
             }
