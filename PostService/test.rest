@@ -53,3 +53,42 @@ DELETE http://localhost:5028/postings/1
 
 ### Get deleted posting by id (Перевірка, що посилка дійсно видалена -> 404)
 GET http://localhost:5028/postings/1
+### Некоректні дані: 400 з errors
+POST http://localhost:5028/postings
+Content-Type: application/json
+
+{
+  "from": "",
+  "to": "",
+  "content": "",
+  "deliveryType": 0,
+  "weight": 0,
+  "width": 0,
+  "height": 0,
+  "depth": 0,
+  "value": -1
+}
+
+### Редагування відсутнього запису: 404
+PUT http://localhost:5028/postings/2147483647
+Content-Type: application/json
+
+{
+  "id": 2147483647,
+  "from": "Київ",
+  "to": "Львів",
+  "content": "Документи",
+  "deliveryType": 0,
+  "weight": 1,
+  "width": 20,
+  "height": 10,
+  "depth": 5,
+  "value": null,
+  "price": 50
+}
+
+### Видалення відсутнього запису: 404
+DELETE http://localhost:5028/postings/2147483647
+
+### Для перевірки недоступності зупиніть PostService і повторіть GET.
+### Для перевірки 500 тимчасово згенеруйте виняток в ендпойнті, потім приберіть його.

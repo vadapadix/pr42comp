@@ -1,4 +1,4 @@
-using System.Net.Http.Json;
+using System.Net;
 using PostService.CommonTypes;
 using PostService.Dtos;
 
@@ -6,14 +6,16 @@ namespace PostService.App;
 
 public partial class PostingEditForm : Form
 {
-    private readonly HttpClient _httpClient;
+    public bool RecordNotFound { get; private set; }
+
+    private readonly IPostServiceClient _postServiceClient;
     private readonly int? _editingId;
     private readonly float _editingPrice;
 
-    public PostingEditForm(HttpClient httpClient)
+    public PostingEditForm(IPostServiceClient postServiceClient)
     {
         InitializeComponent();
-        _httpClient = httpClient;
+        _postServiceClient = postServiceClient;
         _editingId = null;
         _editingPrice = 0f;
 
@@ -21,10 +23,10 @@ public partial class PostingEditForm : Form
         cmbDeliveryType.DataSource = Enum.GetValues(typeof(DeliveryType));
     }
 
-    public PostingEditForm(HttpClient httpClient, PostingGetDto posting)
+    public PostingEditForm(IPostServiceClient postServiceClient, PostingGetDto posting)
     {
         InitializeComponent();
-        _httpClient = httpClient;
+        _postServiceClient = postServiceClient;
         _editingId = posting.Id;
         _editingPrice = posting.Price;
 
@@ -82,6 +84,7 @@ public partial class PostingEditForm : Form
         }
 
         btnSave.Enabled = false;
+        btnCancel.Enabled = false;
 
         try
         {
@@ -100,15 +103,29 @@ public partial class PostingEditForm : Form
                     Value = numValue.Value > 0 ? (float)numValue.Value : null
                 };
 
-                var response = await _httpClient.PostAsJsonAsync("postings", postDto);
-                if (response.IsSuccessStatusCode)
+                bool retry = true;
+                while (retry)
                 {
-                    DialogResult = DialogResult.OK;
-                    Close();
-                }
-                else
-                {
-                    MessageBox.Show($"Помилка створення: {response.StatusCode}", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    try
+                    {
+                        await _postServiceClient.CreatePostingAsync(postDto);
+                        DialogResult = DialogResult.OK;
+                        Close();
+                        retry = false;
+                    }
+                    catch (HttpRequestException ex) when (ex.StatusCode == null)
+                    {
+                        var result = MessageBox.Show(
+                            "Не вдалося з'єднатися з сервером. Повторити спробу?",
+                            "Сервер недоступний",
+                            MessageBoxButtons.RetryCancel,
+                            MessageBoxIcon.Warning
+                        );
+                        if (result != DialogResult.Retry)
+                        {
+                            retry = false;
+                        }
+                    }
                 }
             }
             else
@@ -128,25 +145,53 @@ public partial class PostingEditForm : Form
                     Price = _editingPrice
                 };
 
-                var response = await _httpClient.PutAsJsonAsync($"postings/{_editingId.Value}", putDto);
-                if (response.IsSuccessStatusCode)
+                bool retry = true;
+                while (retry)
                 {
-                    DialogResult = DialogResult.OK;
-                    Close();
-                }
-                else
-                {
-                    MessageBox.Show($"Помилка оновлення: {response.StatusCode}", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    try
+                    {
+                        await _postServiceClient.UpdatePostingAsync(_editingId.Value, putDto);
+                        DialogResult = DialogResult.OK;
+                        Close();
+                        retry = false;
+                    }
+                    catch (HttpRequestException ex) when (ex.StatusCode == null)
+                    {
+                        var result = MessageBox.Show(
+                            "Не вдалося з'єднатися з сервером. Повторити спробу?",
+                            "Сервер недоступний",
+                            MessageBoxButtons.RetryCancel,
+                            MessageBoxIcon.Warning
+                        );
+                        if (result != DialogResult.Retry)
+                        {
+                            retry = false;
+                        }
+                    }
+                    catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        RecordNotFound = true;
+                        MessageBox.Show("Відправлення вже не існує. Список буде оновлено.", "Не знайдено", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        DialogResult = DialogResult.Cancel;
+                        Close();
+                        retry = false;
+                    }
                 }
             }
         }
-        catch (Exception ex)
+        catch (PostingValidationException ex)
         {
-            MessageBox.Show($"Помилка зв'язку: {ex.Message}", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            var messages = new List<string>();
+            foreach (var field in ex.Errors)
+            {
+                messages.AddRange(field.Value);
+            }
+            MessageBox.Show(string.Join(Environment.NewLine, messages), "Перевірте введені дані");
         }
         finally
         {
             btnSave.Enabled = true;
+            btnCancel.Enabled = true;
         }
     }
 

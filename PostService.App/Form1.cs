@@ -1,16 +1,17 @@
 using PostService.Dtos;
-using System.Net.Http.Json;
+using System.Net;
 
 namespace PostService.App
 {
     public partial class Form1 : Form
     {
-        private readonly HttpClient _httpClient = new() { BaseAddress = new Uri("http://localhost:5028") };
+        private readonly IPostServiceClient _postServiceClient;
 
         public Form1()
         {
             InitializeComponent();
             gridPostings.AutoGenerateColumns = false;
+            _postServiceClient = new PostServiceClient();
         }
 
         private async void Form1_Load(object sender, EventArgs e)
@@ -20,14 +21,28 @@ namespace PostService.App
 
         private async Task LoadPostingAsync()
         {
-            try
+            bool retry = true;
+            while (retry)
             {
-                var postings = await _httpClient.GetFromJsonAsync<PostingGetDto[]>("postings");
-                gridPostings.DataSource = postings;
-            }
-            catch (HttpRequestException)
-            {
-                MessageBox.Show("Не вдалося отримати дані, перевірте чи запущено PostService", "Помилка зв'язку", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                try
+                {
+                    var postings = await _postServiceClient.GetPostingsAsync();
+                    gridPostings.DataSource = postings;
+                    retry = false;
+                }
+                catch (HttpRequestException e) when (e.StatusCode == null)
+                {
+                    var result = MessageBox.Show(
+                        "Не вдалося з'єднатися з сервером. Повторити спробу?",
+                        "Сервер недоступний",
+                        MessageBoxButtons.RetryCancel,
+                        MessageBoxIcon.Warning
+                    );
+                    if (result != DialogResult.Retry)
+                    {
+                        retry = false;
+                    }
+                }
             }
         }
 
@@ -37,8 +52,8 @@ namespace PostService.App
 
         private async void btnCreate_Click(object sender, EventArgs e)
         {
-            using var dialog = new PostingEditForm(_httpClient);
-            if (dialog.ShowDialog() == DialogResult.OK)
+            using var dialog = new PostingEditForm(_postServiceClient);
+            if (dialog.ShowDialog() == DialogResult.OK || dialog.RecordNotFound)
             {
                 await LoadPostingAsync();
             }
@@ -52,8 +67,8 @@ namespace PostService.App
                 return;
             }
 
-            using var dialog = new PostingEditForm(_httpClient, selectedPosting);
-            if (dialog.ShowDialog() == DialogResult.OK)
+            using var dialog = new PostingEditForm(_postServiceClient, selectedPosting);
+            if (dialog.ShowDialog() == DialogResult.OK || dialog.RecordNotFound)
             {
                 await LoadPostingAsync();
             }
@@ -79,11 +94,34 @@ namespace PostService.App
                 return;
             }
 
-            var response = await _httpClient.DeleteAsync($"postings/{selectedPosting.Id}");
-            await LoadPostingAsync();
-            if (!response.IsSuccessStatusCode)
+            bool retry = true;
+            while (retry)
             {
-                MessageBox.Show($"Не вдалося видалити відправлення, помилка: {(int)response.StatusCode}", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                try
+                {
+                    await _postServiceClient.DeletePostingAsync(selectedPosting.Id);
+                    await LoadPostingAsync();
+                    retry = false;
+                }
+                catch (HttpRequestException ex) when (ex.StatusCode == null)
+                {
+                    var result = MessageBox.Show(
+                        "Не вдалося з'єднатися з сервером. Повторити спробу?",
+                        "Сервер недоступний",
+                        MessageBoxButtons.RetryCancel,
+                        MessageBoxIcon.Warning
+                    );
+                    if (result != DialogResult.Retry)
+                    {
+                        retry = false;
+                    }
+                }
+                catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+                {
+                    MessageBox.Show("Відправлення вже не існує. Список буде оновлено.", "Не знайдено", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    await LoadPostingAsync();
+                    retry = false;
+                }
             }
         }
 
@@ -94,8 +132,8 @@ namespace PostService.App
 
         private async void button1_Click(object sender, EventArgs e)
         {
-            using var dialog = new PostingEditForm(_httpClient);
-            if (dialog.ShowDialog() == DialogResult.OK)
+            using var dialog = new PostingEditForm(_postServiceClient);
+            if (dialog.ShowDialog() == DialogResult.OK || dialog.RecordNotFound)
             {
                 await LoadPostingAsync();
             }
