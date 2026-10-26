@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using PostService.Dtos;
 using PostService.Mappings;
 using PostService.BusinessLogic;
@@ -15,6 +16,7 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddDbContext<PostingDbContext>();
 builder.Services.AddScoped<IPostingRepository, PostingRepository>();
 builder.Services.AddScoped<IPostingService, PostingService>();
 
@@ -24,11 +26,11 @@ app.UseCors();
 
 using (var scope = app.Services.CreateScope())
 {
-    var repository = scope.ServiceProvider.GetRequiredService<IPostingRepository>();
-    repository.CreateDb();
+    var dbContext = scope.ServiceProvider.GetRequiredService<PostingDbContext>();
+    dbContext.Database.EnsureCreated();
 }
 
-app.MapGet("/", () => "Це API поштового клієнта");
+app.MapGet("/", () => "�� API ���⮢��� ��?��");
 
 app.MapGet("/postings", (IPostingService postingService) =>
 {
@@ -65,7 +67,7 @@ app.MapPut("/postings/{id}", (int id, PostingPutDto putDto, IPostingService post
 {
     if (id != putDto.Id)
     {
-        return Results.BadRequest("Id в маршруті та в тілі запиту не збігаються");
+        return Results.BadRequest("Id � �������? � � �?�? ������ �� ��?�������");
     }
 
     var postingToUpdate = PostingMapper.ToPosting(putDto);
