@@ -30,6 +30,18 @@ namespace PostService.App
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             gridPostings = new DataGridView();
+            Id = new DataGridViewTextBoxColumn();
+            From = new DataGridViewTextBoxColumn();
+            To = new DataGridViewTextBoxColumn();
+            Content = new DataGridViewTextBoxColumn();
+            DeliveryType = new DataGridViewTextBoxColumn();
+            Weight = new DataGridViewTextBoxColumn();
+            WidthColumn = new DataGridViewTextBoxColumn();
+            HeightColumn = new DataGridViewTextBoxColumn();
+            Depth = new DataGridViewTextBoxColumn();
+            Value = new DataGridViewTextBoxColumn();
+            Price = new DataGridViewTextBoxColumn();
+            CreatredAt = new DataGridViewTextBoxColumn();
             toolStrip1 = new ToolStrip();
             btnCreate = new ToolStripButton();
             btnEdit = new ToolStripButton();
@@ -42,18 +54,6 @@ namespace PostService.App
             label1 = new Label();
             button1 = new Button();
             process1 = new System.Diagnostics.Process();
-            Id = new DataGridViewTextBoxColumn();
-            From = new DataGridViewTextBoxColumn();
-            To = new DataGridViewTextBoxColumn();
-            Content = new DataGridViewTextBoxColumn();
-            DeliveryType = new DataGridViewTextBoxColumn();
-            Weight = new DataGridViewTextBoxColumn();
-            Width = new DataGridViewTextBoxColumn();
-            Height = new DataGridViewTextBoxColumn();
-            Depth = new DataGridViewTextBoxColumn();
-            Value = new DataGridViewTextBoxColumn();
-            Price = new DataGridViewTextBoxColumn();
-            CreatredAt = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)gridPostings).BeginInit();
             toolStrip1.SuspendLayout();
             panel1.SuspendLayout();
@@ -63,12 +63,85 @@ namespace PostService.App
             // 
             gridPostings.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             gridPostings.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            gridPostings.Columns.AddRange(new DataGridViewColumn[] { Id, From, To, Content, DeliveryType, Weight, Width, Height, Depth, Value, Price, CreatredAt });
-            gridPostings.Location = new Point(17, 88);
+            gridPostings.Columns.AddRange(new DataGridViewColumn[] { Id, From, To, Content, DeliveryType, Weight, WidthColumn, HeightColumn, Depth, Value, Price, CreatredAt });
+            gridPostings.Location = new Point(17, 74);
             gridPostings.Name = "gridPostings";
-            gridPostings.Size = new Size(1043, 347);
+            gridPostings.Size = new Size(1043, 361);
             gridPostings.TabIndex = 0;
             gridPostings.CellContentClick += dataGridView1_CellContentClick;
+            // 
+            // Id
+            // 
+            Id.DataPropertyName = "Id";
+            Id.HeaderText = "Ід";
+            Id.Name = "Id";
+            Id.Visible = false;
+            // 
+            // From
+            // 
+            From.DataPropertyName = "From";
+            From.HeaderText = "Від";
+            From.Name = "From";
+            // 
+            // To
+            // 
+            To.DataPropertyName = "To";
+            To.HeaderText = "До";
+            To.Name = "To";
+            // 
+            // Content
+            // 
+            Content.DataPropertyName = "Content";
+            Content.HeaderText = "В посилці";
+            Content.Name = "Content";
+            // 
+            // DeliveryType
+            // 
+            DeliveryType.DataPropertyName = "DeliveryType";
+            DeliveryType.HeaderText = "Тип відправлення";
+            DeliveryType.Name = "DeliveryType";
+            // 
+            // Weight
+            // 
+            Weight.DataPropertyName = "Weight";
+            Weight.HeaderText = "Вага";
+            Weight.Name = "Weight";
+            // 
+            // WidthColumn
+            // 
+            WidthColumn.DataPropertyName = "Width";
+            WidthColumn.HeaderText = "Ширина";
+            WidthColumn.Name = "WidthColumn";
+            // 
+            // HeightColumn
+            // 
+            HeightColumn.DataPropertyName = "Height";
+            HeightColumn.HeaderText = "Висота";
+            HeightColumn.Name = "HeightColumn";
+            // 
+            // Depth
+            // 
+            Depth.DataPropertyName = "Depth";
+            Depth.HeaderText = "Довжина";
+            Depth.Name = "Depth";
+            // 
+            // Value
+            // 
+            Value.DataPropertyName = "Value";
+            Value.HeaderText = "Значення";
+            Value.Name = "Value";
+            // 
+            // Price
+            // 
+            Price.DataPropertyName = "Price";
+            Price.HeaderText = "Ціна";
+            Price.Name = "Price";
+            // 
+            // CreatredAt
+            // 
+            CreatredAt.DataPropertyName = "CreatedAt";
+            CreatredAt.HeaderText = "Дата відправлення";
+            CreatredAt.Name = "CreatredAt";
             // 
             // toolStrip1
             // 
@@ -145,14 +218,14 @@ namespace PostService.App
             panel1.Controls.Add(button1);
             panel1.Location = new Point(17, 35);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1038, 50);
+            panel1.Size = new Size(1038, 33);
             panel1.TabIndex = 2;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label1.Location = new Point(4, 12);
+            label1.Location = new Point(3, 3);
             label1.Name = "label1";
             label1.Size = new Size(279, 25);
             label1.TabIndex = 1;
@@ -167,7 +240,7 @@ namespace PostService.App
             button1.ImageAlign = ContentAlignment.MiddleLeft;
             button1.Location = new Point(829, 3);
             button1.Name = "button1";
-            button1.Size = new Size(206, 44);
+            button1.Size = new Size(206, 25);
             button1.TabIndex = 0;
             button1.Text = "Створення відправлення";
             button1.UseVisualStyleBackColor = false;
@@ -185,79 +258,6 @@ namespace PostService.App
             process1.StartInfo.UseCredentialsForNetworkingOnly = false;
             process1.StartInfo.UserName = "";
             process1.SynchronizingObject = this;
-            // 
-            // Id
-            // 
-            Id.DataPropertyName = "Id";
-            Id.HeaderText = "Ід";
-            Id.Name = "Id";
-            Id.Visible = false;
-            // 
-            // From
-            // 
-            From.DataPropertyName = "From";
-            From.HeaderText = "Від";
-            From.Name = "From";
-            // 
-            // To
-            // 
-            To.DataPropertyName = "To";
-            To.HeaderText = "До";
-            To.Name = "To";
-            // 
-            // Content
-            // 
-            Content.DataPropertyName = "Content";
-            Content.HeaderText = "В посилці";
-            Content.Name = "Content";
-            // 
-            // DeliveryType
-            // 
-            DeliveryType.DataPropertyName = "DeliveryType";
-            DeliveryType.HeaderText = "Тип відправлення";
-            DeliveryType.Name = "DeliveryType";
-            // 
-            // Weight
-            // 
-            Weight.DataPropertyName = "Weight";
-            Weight.HeaderText = "Вага";
-            Weight.Name = "Weight";
-            // 
-            // Width
-            // 
-            Width.DataPropertyName = "Width";
-            Width.HeaderText = "Ширина";
-            Width.Name = "Width";
-            // 
-            // Height
-            // 
-            Height.DataPropertyName = "Height";
-            Height.HeaderText = "Висота";
-            Height.Name = "Height";
-            // 
-            // Depth
-            // 
-            Depth.DataPropertyName = "Depth";
-            Depth.HeaderText = "Довжина";
-            Depth.Name = "Depth";
-            // 
-            // Value
-            // 
-            Value.DataPropertyName = "Value";
-            Value.HeaderText = "Значення";
-            Value.Name = "Value";
-            // 
-            // Price
-            // 
-            Price.DataPropertyName = "Price";
-            Price.HeaderText = "Ціна";
-            Price.Name = "Price";
-            // 
-            // CreatredAt
-            // 
-            CreatredAt.DataPropertyName = "CreatedAt";
-            CreatredAt.HeaderText = "Дата відправлення";
-            CreatredAt.Name = "CreatredAt";
             // 
             // Form1
             // 
@@ -301,11 +301,12 @@ namespace PostService.App
         private DataGridViewTextBoxColumn Content;
         private DataGridViewTextBoxColumn DeliveryType;
         private DataGridViewTextBoxColumn Weight;
-        private DataGridViewTextBoxColumn Width;
-        private DataGridViewTextBoxColumn Height;
+        private DataGridViewTextBoxColumn WidthColumn;
+        private DataGridViewTextBoxColumn HeightColumn;
         private DataGridViewTextBoxColumn Depth;
         private DataGridViewTextBoxColumn Value;
         private DataGridViewTextBoxColumn Price;
         private DataGridViewTextBoxColumn CreatredAt;
     }
 }
+
