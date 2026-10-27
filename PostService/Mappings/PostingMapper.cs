@@ -3,8 +3,12 @@ using PostService.Dtos;
 using PostService.Models;
 namespace PostService.Mappings;
 
+/// <summary>Перетворення між DTO та моделлю поштового відправлення.</summary>
 public static class PostingMapper
 {
+    /// <summary>Перетворити DTO створення на модель.</summary>
+    /// <param name="dto">Дані нового відправлення.</param>
+    /// <returns>Модель нового відправлення.</returns>
     public static Posting ToPosting(PostingPostDto dto)
     {
         return new Posting
@@ -21,6 +25,9 @@ public static class PostingMapper
         };
     }
 
+    /// <summary>Перетворити DTO оновлення на модель.</summary>
+    /// <param name="dto">Дані оновлення відправлення.</param>
+    /// <returns>Модель із новими даними.</returns>
     public static Posting ToPosting(PostingPutDto dto)
     {
         return new Posting
@@ -39,6 +46,9 @@ public static class PostingMapper
         };
     }
 
+    /// <summary>Перетворити модель на DTO відповіді.</summary>
+    /// <param name="posting">Модель збереженого відправлення.</param>
+    /// <returns>Дані відправлення для відповіді API.</returns>
     public static PostingGetDto ToPostingGetDto(Posting posting)
     {
         return new PostingGetDto
@@ -58,6 +68,9 @@ public static class PostingMapper
         };
     }
 
+    /// <summary>Перетворити модель на DTO відповіді через сумісний метод.</summary>
+    /// <param name="posting">Модель збереженого відправлення.</param>
+    /// <returns>Дані відправлення для відповіді API.</returns>
     public static PostingGetDto ToPostiongGetDto(Posting posting)
     {
         return ToPostingGetDto(posting);
