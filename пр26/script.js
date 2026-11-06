@@ -3,10 +3,10 @@ async function loadData() {
     statusEl.textContent = 'Завантаження...';
     const response = await fetch('http://localhost:5028/postings');
     if (!response.ok) {
-        statusEl.textContent = 'Помилка: ' + response.status;
-        return null;
+        throw new Error('Сервер повернув помилку: ' + response.status);
     }
     const data = await response.json();
+    console.log(data);
     statusEl.textContent = 'Завантажено ' + data.length + ' записів';
     return data;
 }
@@ -34,9 +34,13 @@ function renderTable(data) {
 }
 
 async function refresh() {
-    const data = await loadData();
-    if (data) {
+    try {
+        const data = await loadData();
         renderTable(data);
+    } catch (error) {
+        document.getElementById('status').textContent = error instanceof TypeError
+            ? 'Не вдалося з’єднатися із сервером PostService.'
+            : error.message;
     }
 }
 

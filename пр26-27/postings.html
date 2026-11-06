@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="uk">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Поштові відправлення</title>
+        <style>
+            th,
+            td {
+                border: 1px solid #ccc;
+                padding: 6px 10px;
+                text-align: left;
+            }
+            th {
+                background-color: #f0f0f0;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Список відправлень</h1>
+        <p><a href="index.html">Створити відправлення</a></p>
+        <p id="status" role="status"></p>
+        <button onclick="refresh()">Оновити</button>
+        <table style="border-collapse: collapse; width: 100%; border: 1px solid #ccc">
+            <thead id="table-header">
+                <tr>
+                    <th x-column="content">Вміст</th>
+                    <th x-column="from">Відправник</th>
+                    <th x-column="to">Одержувач</th>
+                    <th x-column="deliveryType">Тип доставки</th>
+                    <th x-column="weight">Вага, кг</th>
+                    <th x-column="depth">Довжина, см</th>
+                    <th x-column="width">Ширина, см</th>
+                    <th x-column="value">Оголошена вартість</th>
+                    <th x-column="price">Ціна доставки</th>
+                </tr>
+            </thead>
+            <tbody id="postings"></tbody>
+        </table>
+        <script src="postings.js"></script>
+    </body>
+</html>

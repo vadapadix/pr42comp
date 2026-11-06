@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="uk">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Нове відправлення — PostService</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <header class="site-header">
+            <div class="header-inner">
+                <a class="brand" href="postings.html">PostService</a>
+                <nav aria-label="Основна навігація">
+                    <a href="postings.html">Головна</a>
+                    <a class="active" href="postings.html">Список відправлень</a>
+                    <a href="#about">Про програму</a>
+                </nav>
+            </div>
+        </header>
+        <main>
+            <p class="breadcrumb">
+                <a href="postings.html">Список відправлень</a>
+                /
+                <span id="breadcrumbMode">Створення</span>
+            </p>
+            <h1 id="pageTitle">Створення нового відправлення</h1>
+            <p class="intro">Заповніть форму для реєстрації поштового відправлення</p>
+            <p id="formStatus" role="alert"></p>
+            <form id="postingForm" novalidate>
+                <div class="form-body">
+                    <div class="form-group">
+                        <label for="from">
+                            Відправник
+                            <span class="required">*</span>
+                        </label>
+                        <input
+                            id="from"
+                            name="from"
+                            type="text"
+                            placeholder="ПІБ або назва організації, телефон"
+                            required
+                            aria-describedby="from-error"
+                        />
+                        <div class="error-msg" id="from-error"></div>
+                        <p class="hint">Приклад: ТОВ «УкрЛогістик», +38 (067) 123-45-67</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="to">
+                            Отримувач
+                            <span class="required">*</span>
+                        </label>
+                        <input
+                            id="to"
+                            name="to"
+                            type="text"
+                            placeholder="ПІБ отримувача, місто, відділення"
+                            required
+                            aria-describedby="to-error"
+                        />
+                        <div class="error-msg" id="to-error"></div>
+                        <p class="hint">
+                            Приклад: Іваненко Петро Сергійович, м. Львів, Відділення №4
+                        </p>
+                    </div>
+                    <div class="two-columns">
+                        <div class="form-group">
+                            <label for="deliveryType">
+                                Тип доставки
+                                <span class="required">*</span>
+                            </label>
+                            <select
+                                id="deliveryType"
+                                name="deliveryType"
+                                required
+                                aria-describedby="deliveryType-error"
+                            >
+                                <option value="0">Відділення</option>
+                                <option value="1">Кур’єр</option>
+                                <option value="2">Експрес-кур’єр</option>
+                            </select>
+                            <div class="error-msg" id="deliveryType-error"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="declaredValue">Оголошена цінність</label>
+                            <input
+                                id="declaredValue"
+                                name="value"
+                                type="number"
+                                placeholder="500"
+                                min="0"
+                                step="0.01"
+                                aria-describedby="declaredValue-error"
+                            />
+                            <div class="error-msg" id="declaredValue-error"></div>
+                        </div>
+                    </div>
+                    <fieldset>
+                        <legend>
+                            Габарити й вага
+                            <span class="required">*</span>
+                        </legend>
+                        <div class="dimensions">
+                            <div class="form-group">
+                                <label for="weight">Вага (кг)</label>
+                                <input
+                                    id="weight"
+                                    name="weight"
+                                    type="number"
+                                    placeholder="1.0"
+                                    required
+                                    min="0.1"
+                                    step="0.1"
+                                    aria-describedby="weight-error"
+                                />
+                                <div class="error-msg" id="weight-error"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="length">Довжина (см)</label>
+                                <input
+                                    id="length"
+                                    name="depth"
+                                    type="number"
+                                    placeholder="20"
+                                    required
+                                    min="1"
+                                    step="0.1"
+                                    aria-describedby="length-error"
+                                />
+                                <div class="error-msg" id="length-error"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="width">Ширина (см)</label>
+                                <input
+                                    id="width"
+                                    name="width"
+                                    type="number"
+                                    placeholder="15"
+                                    required
+                                    min="1"
+                                    step="0.1"
+                                    aria-describedby="width-error"
+                                />
+                                <div class="error-msg" id="width-error"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="height">Висота (см)</label>
+                                <input
+                                    id="height"
+                                    name="height"
+                                    type="number"
+                                    placeholder="10"
+                                    required
+                                    min="1"
+                                    step="0.1"
+                                    aria-describedby="height-error"
+                                />
+                                <div class="error-msg" id="height-error"></div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="form-group description">
+                        <label for="content">
+                            Опис/вміст
+                            <span class="required">*</span>
+                        </label>
+                        <textarea
+                            id="content"
+                            name="content"
+                            placeholder="Опис речей, що відправляються"
+                            required
+                            aria-describedby="content-error"
+                        ></textarea>
+                        <div class="error-msg" id="content-error"></div>
+                        <p class="hint">Наприклад: Документи, одяг, сувенірна продукція</p>
+                    </div>
+                </div>
+                <div class="btn-row">
+                    <button type="button" id="btnCancel">Скасувати</button>
+                    <button type="button" id="btnSave">Зберегти</button>
+                </div>
+            </form>
+        </main>
+        <footer id="about"><div>PostService. Система обліку поштових відправлень.</div></footer>
+        <script src="script.js"></script>
+    </body>
+</html>

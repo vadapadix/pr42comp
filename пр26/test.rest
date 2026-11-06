@@ -1,0 +1,23 @@
+@baseUrl = http://localhost:5028
+
+### Список відправлень
+GET {{baseUrl}}/postings
+
+### Створення
+# @name create
+POST {{baseUrl}}/postings
+Content-Type: application/json
+
+{"from":"Рівне","to":"Луцьк","content":"Документи","deliveryType":0,"weight":2,"width":15,"height":10,"depth":20,"value":500}
+
+### Читання за ідентифікатором
+GET {{baseUrl}}/postings/{{create.response.body.id}}
+
+### Редагування
+PUT {{baseUrl}}/postings/{{create.response.body.id}}
+Content-Type: application/json
+
+{"id":{{create.response.body.id}},"from":"Рівне","to":"Луцьк","content":"Книги","deliveryType":0,"weight":2,"width":15,"height":10,"depth":20,"value":500,"price":100}
+
+### Видалення
+DELETE {{baseUrl}}/postings/{{create.response.body.id}}

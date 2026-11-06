@@ -1,10 +1,8 @@
-/// <reference path="../services/posting-service.js" />
-/// <reference path="../components/toast.js" />
 class PostingEditPage {
     constructor(postingService = new PostingService()) {
         this.postingService = postingService;
         this.form = document.querySelector('#editForm');
-        this.fields = this.form.querySelectorAll('input, select');
+        this.fields = this.form.querySelectorAll('input, select, textarea');
         this.submitButton = this.form.querySelector('#btnSave');
         this.cancelButton = this.form.querySelector('#btnCancel');
         this.weight = this.form.elements.namedItem('weight');
@@ -21,12 +19,12 @@ class PostingEditPage {
             this.#onSubmit();
         });
         this.form.addEventListener('input', event => {
-            if (!event.target.matches('input, select')) return;
+            if (!event.target.matches('input, select, textarea')) return;
             this.#clearValidationError(event.target);
             if (event.target === this.deliveryType) this.#clearValidationError(this.weight);
         });
         this.form.addEventListener('change', event => {
-            if (!event.target.matches('input, select')) return;
+            if (!event.target.matches('input, select, textarea')) return;
             this.#clearValidationError(event.target);
             this.#textValidationRule(event.target);
             event.target.checkValidity();
@@ -91,7 +89,7 @@ class PostingEditPage {
     }
 
     #textValidationRule(field) {
-        if (field.type !== 'text') return;
+        if (field.type !== 'text' && field.tagName !== 'TEXTAREA') return;
         if (field.required && field.value.trim() === '') {
             this.#showValidationError(field, 'Поле є обов’язковим');
         } else if (field.minLength > 0 && field.value.trim().length < field.minLength) {
@@ -150,6 +148,7 @@ class PostingEditPage {
         this.submitButton.disabled = true;
         document.querySelector('#formTitle').textContent = 'Редагування відправлення #' + this.id;
         document.querySelector('.breadcrumb').textContent = 'Список відправлень / Редагування';
+        document.title = 'Редагування відправлення — PostService';
         document.querySelector('.form-heading p').textContent = 'Змініть дані відправлення та збережіть зміни';
         try {
             const posting = await this.postingService.getById(this.id);

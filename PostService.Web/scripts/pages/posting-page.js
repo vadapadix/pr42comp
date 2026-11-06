@@ -10,6 +10,7 @@ class PostingPage {
         this.search = document.querySelector('#postingSearch');
         this.count = document.querySelector('#recordCount');
         this.editButton = document.querySelector('#btnEdit');
+        this.detailsButton = document.querySelector('#btnDetails');
         this.deleteButton = document.querySelector('#btnDelete');
         this.modal = document.querySelector('#confirmModal');
         this.confirmText = this.modal.querySelector('#confirmText');
@@ -29,6 +30,9 @@ class PostingPage {
         });
         document.querySelector('#btnReload').addEventListener('click', () => this.refresh());
         this.search.addEventListener('input', () => this.#render());
+        this.detailsButton.addEventListener('click', () => {
+            if (this.selectedId !== null) window.location.href = 'details.html?id=' + this.selectedId;
+        });
         this.editButton.addEventListener('click', () => {
             if (this.selectedId !== null) window.location.href = 'edit.html?id=' + this.selectedId;
         });
@@ -128,6 +132,7 @@ class PostingPage {
     #updateSelection() {
         const enabled = [...this.tableBody.rows].some(row => Number(row.dataset.id) === this.selectedId);
         this.editButton.disabled = !enabled;
+        this.detailsButton.disabled = !enabled;
         this.deleteButton.disabled = !enabled;
     }
 
